@@ -3,8 +3,6 @@ It aims to be a didactic, header-only alternative to `std::unordered_map`,
 showing how load factor, rehashing and bucket growth affect performance and
 memory usage.
 
-image::docs/benchmark.svg[Benchmark,300,role=center]
-
 == Highlights
 
 * **Separate chaining** with singly-linked bucket lists

@@ -1,0 +1,53 @@
+`HashTableM` is a separate-chaining hash map written in modern **C++17**.  
+It aims to be a didactic, header-only alternative to `std::unordered_map`,
+showing how load factor, rehashing and bucket growth affect performance and
+memory usage.
+
+image::docs/benchmark.svg[Benchmark,300,role=center]
+
+== Highlights
+
+* **Separate chaining** with singly-linked bucket lists
+* **Power-of-two bucket sizing** (`N = 2^k`) – fast `index = hash & (N-1)`
+* Customisable **load-factor** trigger (default = 0.75)
+* Automatic **rehash** + element re-distribution
+* `insert / find / erase` API mirroring the STL container
+* **Unit & micro-benchmarks** against `std::unordered_map`
+
+== Complexity
+
+[options="header"]
+|===
+| Operation | Average | Worst-case
+| `insert`  | *O(1)* | *O(n)* (all keys collide)
+| `find`    | *O(1)* | *O(n)*
+| `erase`   | *O(1)* | *O(n)*
+| Rehash    |   —    | *O(n)*
+|===
+
+== Build & Test
+
+[source,sh]
+----
+# build the demo + tests
+g++ -std=c++17 -O2 -Wall -Wextra hash_tableM.cpp -o hash_demo
+./hash_demo                 # runs self-tests
+
+# build benchmark (requires Google-benchmark or Catch2-bench)
+cmake -S . -B build && cmake --build build --target bench
+./build/bench
+----
+
+== Quick Example
+
+[source,cpp]
+----
+HashTableM<std::string,int> scores;
+
+scores.insert("Alice", 42);
+scores["Bob"] = 17;
+
+if (auto * val = scores.find("Alice"))
+    std::cout << *val << '\n';      // → 42
+scores.erase("Bob");
+----
